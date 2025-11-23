@@ -4,7 +4,7 @@ const App = () => {
   const [activeSection, setActiveSection] = useState('about');
   const [isLoaded, setIsLoaded] = useState(false);
   const [typedText, setTypedText] = useState('');
-  const fullText = 'Senior Enterprise Applications Engineer';
+  const fullText = 'Senior Systems Engineer';
 
   useEffect(() => {
     setIsLoaded(true);
