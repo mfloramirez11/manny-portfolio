@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react';
 import React, { useState, useEffect } from 'react';
 
 const App = () => {
@@ -797,6 +798,7 @@ const App = () => {
           </div>
         </footer>
       </div>
+      <Analytics />
     </div>
   );
 };
