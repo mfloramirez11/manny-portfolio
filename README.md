@@ -2,7 +2,7 @@
 
 Personal portfolio site for Manny Flores.
 
-**Live:** [coming soon]
+**Live:** [mannyflo.com](https://mannyflo.com)
 
 ## About
 
