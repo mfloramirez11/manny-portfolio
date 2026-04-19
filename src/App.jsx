@@ -583,26 +583,12 @@ const App = () => {
               opacity: isLoaded ? 1 : 0,
               transform: isLoaded ? 'translateY(0)' : 'translateY(40px)',
               transition: 'all 0.8s ease 0.2s',
-              display: 'flex',
-              gap: '48px',
-              alignItems: 'center'
+              display: 'block',
+              textAlign: 'center',
+              maxWidth: '800px',
+              margin: '0 auto',
             }}
           >
-            {/* Profile Photo — fix #2: borderRadius was '00%' */}
-            <img
-              src="/profile2.png"
-              alt="Manny Flores"
-              style={{
-                width: '480px',
-                height: '380px',
-                borderRadius: '12px',
-                objectFit: 'contain',
-                border: '2px solid rgba(34, 211, 238, 0.3)',
-                background: 'rgba(10, 10, 15, 0.8)',
-                flexShrink: 0
-              }}
-            />
-
             <div>
               <div className="section-title">Profile</div>
 
