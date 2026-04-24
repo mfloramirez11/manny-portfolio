@@ -87,6 +87,9 @@ const App = () => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (typeof window !== 'undefined' && window.history?.replaceState) {
+        window.history.replaceState(null, '', `#${sectionId}`);
+      }
     }
   };
 
@@ -97,6 +100,18 @@ const App = () => {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [isMenuOpen]);
+
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (!hash) return;
+    const valid = NAV_SECTIONS.some(s => s.id === hash);
+    if (!valid) return;
+    const el = document.getElementById(hash);
+    if (el) {
+      setActiveSection(hash);
+      requestAnimationFrame(() => el.scrollIntoView({ block: 'start' }));
+    }
+  }, []);
 
   const skills = [
     { category: 'Identity & Access', items: ['Okta OIE', 'SAML 2.0', 'OAuth 2.0', 'OIDC', 'SCIM', 'RBAC', 'Zero Trust'] },
