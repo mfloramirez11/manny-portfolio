@@ -90,6 +90,14 @@ const App = () => {
     }
   };
 
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'Escape' && isMenuOpen) setIsMenuOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isMenuOpen]);
+
   const skills = [
     { category: 'Identity & Access', items: ['Okta OIE', 'SAML 2.0', 'OAuth 2.0', 'OIDC', 'SCIM', 'RBAC', 'Zero Trust'] },
     { category: 'Automation & IaC', items: ['Python', 'Bash', 'Okta Workflows', 'Terraform', 'GCP IAM', 'APIs & Integrations'] },
@@ -411,6 +419,25 @@ const App = () => {
           outline-offset: 2px;
         }
 
+        a:focus-visible,
+        button:focus-visible {
+          outline: 2px solid #22d3ee;
+          outline-offset: 2px;
+          border-radius: 4px;
+        }
+
+        .sr-only {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip: rect(0, 0, 0, 0);
+          white-space: nowrap;
+          border: 0;
+        }
+
         .hamburger span {
           display: block;
           width: 22px;
@@ -488,8 +515,7 @@ const App = () => {
         }
       `}</style>
 
-      {/* Fix #10: Skip to content */}
-      <a href="#about" className="skip-link">Skip to content</a>
+      <a href="#main" className="skip-link">Skip to content</a>
 
       <div className="grid-bg" />
 
@@ -532,6 +558,7 @@ const App = () => {
                 key={id}
                 className={`nav-item ${activeSection === id ? 'active' : ''}`}
                 onClick={() => scrollToSection(id)}
+                aria-current={activeSection === id ? 'page' : undefined}
               >
                 {label}
               </button>
@@ -562,12 +589,14 @@ const App = () => {
               className={`nav-item ${activeSection === id ? 'active' : ''}`}
               onClick={() => scrollToSection(id)}
               tabIndex={isMenuOpen ? 0 : -1}
+              aria-current={activeSection === id ? 'page' : undefined}
             >
               {label}
             </button>
           ))}
         </div>
 
+        <main id="main">
         {/* Hero / About */}
         <section id="about" style={{
           minHeight: '100vh',
@@ -923,6 +952,7 @@ const App = () => {
           </div>
         </section>
 
+        </main>
         {/* Footer — fix #3: color was #52525b (~2.9:1) → #a1a1aa */}
         <footer style={{ padding: '60px 40px', borderTop: '1px solid rgba(255, 255, 255, 0.05)', textAlign: 'center' }}>
           <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '14px', color: '#a1a1aa' }}>
