@@ -1,70 +1,68 @@
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
-const IconShield = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-    <path d="M9 12l2 2 4-4"/>
+const IconArrow = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <line x1="5" y1="12" x2="19" y2="12" />
+    <polyline points="12 5 19 12 12 19" />
   </svg>
 );
 
-const IconBot = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <rect x="3" y="11" width="18" height="10" rx="2"/>
-    <circle cx="12" cy="5" r="2"/>
-    <path d="M12 7v4"/>
-    <circle cx="8.5" cy="16" r="1.5" fill="#22d3ee" stroke="none"/>
-    <circle cx="15.5" cy="16" r="1.5" fill="#22d3ee" stroke="none"/>
-  </svg>
-);
 
-const IconGear = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <circle cx="12" cy="12" r="3"/>
-    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-  </svg>
+const Eyebrow = ({ chapter, label }) => (
+  <div className={`eyebrow${chapter ? ` eyebrow-ch-${chapter}` : ''}`}>
+    <span className="eyebrow-dot" aria-hidden="true">●</span>
+    <span>
+      {chapter ? `CHAPTER ${chapter} · ` : ''}
+      {label}
+    </span>
+  </div>
 );
-
-const IconCloud = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
-  </svg>
-);
-
-// Kill switch: set WRITING_ENABLED to false to hide the Writing section and its nav entry.
-const WRITING_ENABLED = true;
 
 const NAV_SECTIONS = [
   { id: 'about',      label: 'about' },
-  { id: 'expertise',  label: 'expertise' },
-  { id: 'skills',     label: 'skills' },
+  { id: 'stack',      label: 'stack' },
   { id: 'projects',   label: 'projects' },
-  ...(WRITING_ENABLED ? [{ id: 'writing', label: 'writing' }] : []),
-  { id: 'trajectory', label: 'trajectory' },
-  { id: 'philosophy', label: 'work' },
+  { id: 'trajectory', label: 'stewardship' },
 ];
+
+const ResumeModal = ({ onClose }) => {
+  const closeRef = useRef(null);
+
+  useEffect(() => {
+    const prev = document.activeElement;
+    closeRef.current?.focus();
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+      prev?.focus();
+    };
+  }, [onClose]);
+
+  return (
+    <div className="resume-overlay" role="dialog" aria-modal="true" aria-label="Resume viewer" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="resume-panel">
+        <div className="resume-panel-header">
+          <span className="resume-panel-title">Manny Flores · Resume</span>
+          <div className="resume-panel-actions">
+            <a href="/resume.pdf" download="Manny_Flores_Resume_2026.pdf" className="btn-ghost resume-download-btn">Download</a>
+            <button ref={closeRef} className="resume-close-btn" onClick={onClose} aria-label="Close resume">✕</button>
+          </div>
+        </div>
+        <iframe src="/resume.pdf#navpanes=0&toolbar=0" className="resume-iframe" title="Manny Flores Resume" />
+      </div>
+    </div>
+  );
+};
 
 const App = () => {
   const [activeSection, setActiveSection] = useState('about');
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [typedText, setTypedText] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const fullText = 'Senior Systems Engineer';
-
-  useEffect(() => {
-    setIsLoaded(true);
-    let index = 0;
-    const timer = setInterval(() => {
-      if (index <= fullText.length) {
-        setTypedText(fullText.slice(0, index));
-        index++;
-      } else {
-        clearInterval(timer);
-      }
-    }, 50);
-    return () => clearInterval(timer);
-  }, []);
+  const [resumeOpen, setResumeOpen] = useState(false);
 
   // Sync active nav item to scroll position
   useEffect(() => {
@@ -73,7 +71,7 @@ const App = () => {
       if (!el) return null;
       const obs = new IntersectionObserver(
         ([entry]) => { if (entry.isIntersecting) setActiveSection(id); },
-        { rootMargin: '-40% 0px -55% 0px', threshold: 0 }
+        { rootMargin: '-15% 0px -25% 0px', threshold: 0 }
       );
       obs.observe(el);
       return obs;
@@ -101,6 +99,19 @@ const App = () => {
     return () => window.removeEventListener('keydown', onKey);
   }, [isMenuOpen]);
 
+  // Headline underline draw-in on scroll
+  useEffect(() => {
+    const els = document.querySelectorAll('.section-headline');
+    const obs = new IntersectionObserver(
+      (entries) => entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in-view'); obs.unobserve(e.target); }
+      }),
+      { rootMargin: '-5% 0px -5% 0px', threshold: 0.2 }
+    );
+    els.forEach(el => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+
   useEffect(() => {
     const hash = window.location.hash.slice(1);
     if (!hash) return;
@@ -123,117 +134,111 @@ const App = () => {
   const expertise = [
     {
       title: 'Identity & Access Management',
-      icon: <IconShield />,
-      description: 'End-to-end ownership of enterprise identity lifecycle, access policies, and modern authentication protocols.',
+      description: 'I own the identity stack: how people get in, what they can touch, and how access ends when they leave.',
       details: [
         'Okta administration, SAML 2.0, OAuth 2.0, OIDC integrations',
         'SCIM provisioning and user lifecycle automation',
         'Zero Trust architecture and RBAC policy design',
-        'SOX compliance and IAM roadmap ownership'
-      ]
+        'SOX compliance and IAM roadmap ownership',
+      ],
     },
     {
       title: 'AI-Powered Identity Automation',
-      icon: <IconBot />,
-      description: 'Building intelligent systems that replace traditional rule-based connectors with AI-driven lifecycle management.',
+      description: "Building the identity layer that lets enterprise AI tools work: bridging Okta auth to apps that don't support direct OAuth, and handling the lifecycle edge cases SCIM can't reach.",
       details: [
-        'MCP integrations for AI-orchestrated identity events',
+        'Okta MCP integrations enabling enterprise AI tool adoption',
         'LLM access governance for enterprise AI tools',
-        "Handling exceptions and edge cases that SCIM can't address",
-        'Designing self-healing, scalable identity workflows'
-      ]
+        "Lifecycle edge cases beyond SCIM's reach",
+        'Self-healing identity workflows',
+      ],
     },
     {
       title: 'Automation & Integration Engineering',
-      icon: <IconGear />,
-      description: 'Eliminating operational toil through durable automations and cross-system integrations.',
+      description: 'Removing repetitive ops work with scripts and integrations built to hold up over time.',
       details: [
         'Okta Workflows for identity lifecycle events',
         'Python and Bash scripting for system automation',
         'API integrations across SaaS, ITSM, and HRIS platforms',
-        'Terraform for infrastructure-as-code (expanding)'
-      ]
+        'Terraform for infrastructure-as-code',
+      ],
     },
     {
       title: 'Corporate Applications Infrastructure',
-      icon: <IconCloud />,
-      description: 'Stewarding the core infrastructure layer (Okta, GCP, and Google Workspace) that CorpEng depends on to build and ship.',
+      description: 'I own the core infrastructure layer the company depends on to build and ship: Okta, GCP, and Google Workspace.',
       details: [
         'Okta administration and Terraform-based IaC for identity',
-        'GCP governance aligned to CorpEng AI workloads and sprawl prevention',
+        'GCP governance aligned to company AI workloads and sprawl prevention',
         'Google Workspace security hardening and administration',
-        'Lifecycle governance: vetting EDDs, PRDs, and TRA authorship'
-      ]
-    }
+        'Technical review authorship for identity changes',
+        'Lifecycle governance and tech debt execution',
+      ],
+    },
   ];
 
   const currentProjects = [
     {
       title: 'Terraform Okta: Identity as Code',
       status: 'Building',
-      description: 'Migrating Okta configuration to Terraform, making identity infrastructure auditable, repeatable, and version-controlled. Eliminates manual config drift and enables consistent policy enforcement across the tenant.',
-      tags: ['Okta', 'Terraform', 'IaC', 'Identity Infrastructure', 'CAPPS Infra']
+      description: 'Moving Okta config from clicks to Terraform. Config drift disappears, changes get reviewed like code, and policy stays consistent across the tenant.',
+      tags: ['Okta', 'Terraform', 'IaC', 'Identity Infrastructure', 'Corp Apps'],
     },
     {
       title: 'Secure GCP for AI Workloads',
-      status: 'Active',
-      description: 'Establishing GCP governance for CorpEng. Enabling teams to securely host AI-powered projects and vibe-coded tools without creating sprawl. Aligning IAM, project structure, and access controls so engineers can ship fast with guardrails.',
-      tags: ['GCP', 'AI Enablement', 'Sprawl Prevention', 'CorpEng', 'Zero Trust']
+      status: 'Building',
+      description: 'Building the GCP foundation that lets engineers ship AI-assisted tools to production safely. Terraform-managed IAM, project structure, and access controls, so teams move from local prototypes to hosted services without creating sprawl.',
+      tags: ['GCP', 'Terraform', 'IAM', 'AI Enablement', 'Sprawl Prevention'],
     },
     {
       title: 'Google Workspace Security Hardening',
-      status: 'Active',
-      description: 'Tightening Google Workspace administration across the org: access policies, DLP, third-party OAuth governance, and audit coverage. Reducing surface area as AI tooling adoption accelerates.',
-      tags: ['Google Workspace', 'DLP', 'OAuth Governance', 'Security', 'CAPPS Infra']
-    }
+      status: 'Building',
+      description: "Tightening Google Workspace: access policies, DLP, third-party OAuth, audit coverage. The attack surface gets bigger every time someone installs a new AI tool, and that's the part I'm watching.",
+      tags: ['Google Workspace', 'DLP', 'OAuth Governance', 'Security', 'Corp Apps'],
+    },
   ];
 
-  return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%)',
-      color: '#e4e4e7',
-      fontFamily: '"IBM Plex Sans", -apple-system, sans-serif',
-    }}>
+  const stewardship = [
+    { area: 'Okta Identity Infrastructure', desc: 'IAM ownership, Terraform-driven config, lifecycle automation' },
+    { area: 'GCP Governance',                desc: 'Company cloud access, AI workload hosting, sprawl prevention' },
+    { area: 'Google Workspace',              desc: 'DLP, OAuth governance, access policies, Workspace administration' },
+    { area: 'Technical Leadership',          desc: 'Lifecycle governance, technical review authorship, tech debt cleanup' },
+  ];
 
+  const now = new Date();
+  const year = now.getFullYear();
+  const monthNum = String(now.getMonth() + 1).padStart(2, '0');
+  const monthName = now.toLocaleString('en-US', { month: 'long' });
+
+  return (
+    <>
       <a href="#main" className="skip-link">Skip to content</a>
 
-      <div className="grid-bg" />
+      {/* Masthead · magazine top rule */}
+      <div className="masthead" role="presentation">
+        <span className="masthead-dot" aria-hidden="true">●</span>
+        <span>Cuaderno · {year}</span>
+        <span className="masthead-spacer" />
+        <span>No. {monthNum} · {monthName}</span>
+      </div>
 
-      <div className="content-wrapper">
-        {/* Navigation */}
-        <nav
-          aria-label="Main navigation"
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            padding: '16px 40px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            background: 'rgba(10, 10, 15, 0.8)',
-            backdropFilter: 'blur(20px)',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-            zIndex: 100,
-            opacity: isLoaded ? 1 : 0,
-            transform: isLoaded ? 'translateY(0)' : 'translateY(-20px)',
-            transition: 'all 0.6s ease'
-          }}
-        >
-          <div style={{
-            fontFamily: '"IBM Plex Mono", monospace',
-            fontSize: '18px',
-            fontWeight: 600,
-            color: '#22d3ee',
-            letterSpacing: '1px'
-          }}>
-            {'<MF />'}
-          </div>
+      {/* Heritage Ribbon · papel-picado color band, once per page */}
+      <div className="heritage-ribbon" role="presentation" aria-hidden="true">
+        <span className="ribbon-stack" />
+        <span className="ribbon-making" />
+        <span className="ribbon-stewardship" />
+      </div>
 
-          {/* Desktop nav */}
-          <div className="nav-desktop" style={{ display: 'flex', gap: '8px' }}>
+      {/* Navigation */}
+      <header className="nav-shell">
+        <nav className="nav-row" aria-label="Main navigation">
+          <button
+            className="wordmark"
+            onClick={() => scrollToSection('about')}
+            aria-label="mannyflo, return to top"
+          >
+            mannyflo.
+          </button>
+
+          <div className="nav-desktop">
             {NAV_SECTIONS.map(({ id, label }) => (
               <button
                 key={id}
@@ -246,7 +251,6 @@ const App = () => {
             ))}
           </div>
 
-          {/* Hamburger (mobile) */}
           <button
             className={`hamburger ${isMenuOpen ? 'open' : ''}`}
             onClick={() => setIsMenuOpen(o => !o)}
@@ -257,192 +261,123 @@ const App = () => {
             <span /><span /><span />
           </button>
         </nav>
+      </header>
 
-        {/* Mobile nav drawer */}
-        <div
-          id="mobile-nav"
-          className={`nav-mobile ${isMenuOpen ? 'open' : ''}`}
-          aria-hidden={!isMenuOpen}
-        >
-          {NAV_SECTIONS.map(({ id, label }) => (
-            <button
-              key={id}
-              className={`nav-item ${activeSection === id ? 'active' : ''}`}
-              onClick={() => scrollToSection(id)}
-              tabIndex={isMenuOpen ? 0 : -1}
-              aria-current={activeSection === id ? 'page' : undefined}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        <main id="main">
-        {/* Hero / About */}
-        <section id="about" style={{
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          padding: '120px 40px 80px',
-          maxWidth: '1200px',
-          margin: '0 auto'
-        }}>
-          <div
-            className="hero-content"
-            style={{
-              opacity: isLoaded ? 1 : 0,
-              transform: isLoaded ? 'translateY(0)' : 'translateY(40px)',
-              transition: 'all 0.8s ease 0.2s',
-              display: 'block',
-              textAlign: 'center',
-              maxWidth: '800px',
-              margin: '0 auto',
-            }}
+      {/* Mobile nav drawer */}
+      <div
+        id="mobile-nav"
+        className={`nav-mobile ${isMenuOpen ? 'open' : ''}`}
+        aria-hidden={!isMenuOpen}
+      >
+        {NAV_SECTIONS.map(({ id, label }) => (
+          <button
+            key={id}
+            className={`nav-item ${activeSection === id ? 'active' : ''}`}
+            onClick={() => scrollToSection(id)}
+            tabIndex={isMenuOpen ? 0 : -1}
+            aria-current={activeSection === id ? 'page' : undefined}
           >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <main id="main">
+        {/* Hero / About */}
+        <section id="about" className="hero" aria-labelledby="hero-name">
+          <div className="hero-grid">
             <div>
-              <div className="section-title">Profile</div>
+              <Eyebrow label="ENGINEER" />
 
-              <h1 className="hero-title" style={{
-                fontSize: '4rem',
-                fontWeight: 700,
-                lineHeight: 1.1,
-                marginBottom: '16px',
-                background: 'linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text'
-              }}>
-                Manny Flores
-              </h1>
+              <h1 id="hero-name" className="hero-name">Manny Flores</h1>
+              <p className="hero-role">Senior Systems Engineer</p>
 
-              {/* Fix #14: aria-label so screen readers get the full title immediately */}
-              <div
-                style={{
-                  fontFamily: '"IBM Plex Mono", monospace',
-                  fontSize: '1.25rem',
-                  color: '#a1a1aa',
-                  marginBottom: '32px',
-                  minHeight: '1.5em'
-                }}
-                role="text"
-                aria-label="Senior Systems Engineer"
-              >
-                <span aria-hidden="true">{typedText}<span className="cursor" /></span>
-              </div>
-
-              <p style={{
-                fontSize: '1.125rem',
-                lineHeight: 1.8,
-                color: '#a1a1aa',
-                maxWidth: '700px',
-                marginBottom: '40px'
-              }}>
-                Senior Systems Engineer at Robinhood, leading <span style={{ color: '#22d3ee' }}>Corporate Applications Infrastructure</span>.
-                Stewarding <strong style={{ color: '#e4e4e7' }}>Okta</strong>, <strong style={{ color: '#e4e4e7' }}>GCP</strong>, and <strong style={{ color: '#e4e4e7' }}>Google Workspace</strong> to harden identity,
-                enable <strong style={{ color: '#e4e4e7' }}>AI workloads</strong> securely, and help CorpEng ship fast without sprawl.
-                Deep roots in <span style={{ color: '#22d3ee' }}>IAM</span> and <span style={{ color: '#22d3ee' }}>AI-powered lifecycle automation</span>.
+              <p className="hero-lede">
+                I run the <span className="accent">identity and corporate apps infrastructure</span>{' '}
+                at Robinhood: Okta, GCP, Google Workspace. Lately my focus has been identity and
+                access management: making AI tooling adoptable across the company without losing
+                control of who can do what.
               </p>
 
-              <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-                <a href="mailto:manny@flores.network" style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '14px 28px',
-                  background: 'linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%)',
-                  color: '#0a0a0f',
-                  textDecoration: 'none',
-                  fontFamily: '"IBM Plex Mono", monospace',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  borderRadius: '8px',
-                  transition: 'all 0.3s ease',
-                  border: 'none'
-                }}>
-                  Get in Touch →
+              <div className="hero-cta-row">
+                <a href="mailto:manny@flores.network" className="btn">
+                  Get in Touch <IconArrow />
                 </a>
-                <a href="https://linkedin.com/in/mannyflores11" target="_blank" rel="noopener noreferrer" style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '14px 28px',
-                  background: 'transparent',
-                  color: '#e4e4e7',
-                  textDecoration: 'none',
-                  fontFamily: '"IBM Plex Mono", monospace',
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  borderRadius: '8px',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  transition: 'all 0.3s ease'
-                }}>
-                  LinkedIn ↗
+                <a
+                  href="https://linkedin.com/in/mannyflores11"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-ghost"
+                >
+                  LinkedIn
                 </a>
+                <button
+                  className="btn-ghost"
+                  onClick={() => setResumeOpen(true)}
+                >
+                  Resume
+                </button>
+              </div>
+
+              <div className="hero-meta" aria-label="Current role and location">
+                <span className="hero-meta-mark" aria-hidden="true">●</span>
+                <span>Robinhood</span>
+                <span className="hero-meta-sep" aria-hidden="true">·</span>
+                <span>Corporate Apps Infra</span>
+                <span className="hero-meta-sep" aria-hidden="true">·</span>
+                <span>SF Bay Area</span>
+                <span className="hero-meta-sep" aria-hidden="true">·</span>
+                <span>2024 to present</span>
               </div>
             </div>
+
+            <img
+              src="/profile2.png"
+              alt="Portrait of Manny Flores"
+              className="hero-portrait"
+              width="240"
+              height="240"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+            />
           </div>
         </section>
 
-        {/* Expertise */}
-        <section id="expertise" style={{
-          padding: '80px 40px',
-          maxWidth: '1200px',
-          margin: '0 auto'
-        }}>
-          <div className="section-title">Core Expertise</div>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 600, marginBottom: '48px', color: '#e4e4e7' }}>
-            What I Do
-          </h2>
+        {/* Stack · Expertise + Tools */}
+        <section id="stack" className="section" aria-labelledby="stack-h">
+          <Eyebrow chapter="01" label="STACK" />
+          <h2 id="stack-h" className="section-headline">Stack.</h2>
 
-          <div className="expertise-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
+          <div className="expertise-grid">
             {expertise.map((item, index) => (
-              <div
-                key={index}
-                className="expertise-card"
-                style={{ animation: `fadeInUp 0.6s ease ${0.1 * index}s both` }}
-              >
-                <div style={{ marginBottom: '16px' }}>{item.icon}</div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '12px', color: '#e4e4e7' }}>
-                  {item.title}
-                </h3>
-                {/* Fix #9: description was #71717a (~4.4:1) → #a1a1aa (~7:1) */}
-                <p style={{ color: '#a1a1aa', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '16px' }}>
-                  {item.description}
-                </p>
-                <ul style={{ listStyle: 'none', padding: 0 }}>
+              <article key={index} className="expertise-card">
+                <span className="expertise-num" aria-hidden="true">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+                <ul>
                   {item.details.map((detail, i) => (
-                    <li key={i} style={{ color: '#a1a1aa', fontSize: '0.875rem', lineHeight: 1.8, paddingLeft: '16px', position: 'relative' }}>
-                      <span style={{ position: 'absolute', left: 0, color: '#22d3ee' }}>→</span>
-                      {detail}
-                    </li>
+                    <li key={i}>{detail}</li>
                   ))}
                 </ul>
-              </div>
+              </article>
             ))}
           </div>
-        </section>
 
-        {/* Skills */}
-        <section id="skills" style={{ padding: '80px 40px', maxWidth: '1200px', margin: '0 auto' }}>
-          <div className="section-title">Technical Stack</div>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 600, marginBottom: '48px', color: '#e4e4e7' }}>
-            Tools & Technologies
-          </h2>
-
-          <div className="skills-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '32px' }}>
-            {skills.map((group, index) => (
+          <div className="stack-tools">
+            <div className="stack-tools-label">
+              <span className="stack-tools-label-bar" aria-hidden="true" />
+              TOOLS
+            </div>
+            <div className="skills-grid">
+              {skills.map((group, index) => (
               <div key={index}>
-                <h4 style={{
-                  fontFamily: '"IBM Plex Mono", monospace',
-                  fontSize: '0.75rem',
-                  letterSpacing: '2px',
-                  textTransform: 'uppercase',
-                  color: '#a1a1aa',
-                  marginBottom: '16px'
-                }}>
+                <div className="skill-group-title">
+                  <span className="skill-group-bar" aria-hidden="true" />
                   {group.category}
-                </h4>
+                </div>
                 <div>
                   {group.items.map((skill, i) => (
                     <span key={i} className="skill-tag">{skill}</span>
@@ -450,202 +385,90 @@ const App = () => {
                 </div>
               </div>
             ))}
+            </div>
           </div>
         </section>
 
-        {/* Projects */}
-        <section id="projects" style={{ padding: '80px 40px', maxWidth: '1200px', margin: '0 auto' }}>
-          <div className="section-title">Current Focus</div>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 600, marginBottom: '48px', color: '#e4e4e7' }}>
-            What I'm Building
-          </h2>
+        {/* Projects · Currently Building */}
+        <section id="projects" className="section" aria-labelledby="projects-h">
+          <Eyebrow chapter="02" label="CURRENT FOCUS" />
+          <h2 id="projects-h" className="section-headline">In the <em>making</em>.</h2>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div className="project-list">
             {currentProjects.map((project, index) => (
-              <div key={index} className="project-card">
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
-                  <span className="status-dot" />
-                  <span style={{
-                    fontFamily: '"IBM Plex Mono", monospace',
-                    fontSize: '0.75rem',
-                    letterSpacing: '1px',
-                    textTransform: 'uppercase',
-                    color: '#22c55e'
-                  }}>
-                    {project.status}
-                  </span>
+              <article
+                key={index}
+                className="project-card"
+                data-status={project.status.toLowerCase()}
+              >
+                <div className="project-status">
+                  <span className="status-dot" aria-hidden="true" />
+                  <span className="project-status-label">{project.status}</span>
                 </div>
-
-                <h3 style={{ fontSize: '1.75rem', fontWeight: 600, marginBottom: '16px', color: '#e4e4e7' }}>
-                  {project.title}
-                </h3>
-
-                <p style={{ color: '#a1a1aa', fontSize: '1.05rem', lineHeight: 1.8, marginBottom: '24px', maxWidth: '800px' }}>
-                  {project.description}
-                </p>
-
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                <h3>{project.title}</h3>
+                <p>{project.description}</p>
+                <div className="project-tags">
                   {project.tags.map((tag, i) => (
-                    <span key={i} style={{
-                      padding: '6px 14px',
-                      background: 'rgba(34, 211, 238, 0.1)',
-                      border: '1px solid rgba(34, 211, 238, 0.3)',
-                      borderRadius: '20px',
-                      fontFamily: '"IBM Plex Mono", monospace',
-                      fontSize: '0.8rem',
-                      color: '#22d3ee'
-                    }}>
-                      {tag}
-                    </span>
+                    <span key={i} className="chip">{tag}</span>
                   ))}
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         </section>
 
-        {/* Writing — kill switch: WRITING_ENABLED at top of file */}
-        {WRITING_ENABLED && (
-          <section id="writing" style={{ padding: '80px 40px', maxWidth: '1200px', margin: '0 auto' }}>
-            <div className="section-title">Field Notes</div>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 600, marginBottom: '24px', color: '#e4e4e7' }}>
-              Writing
-            </h2>
-            <p style={{ color: '#a1a1aa', fontSize: '1.05rem', lineHeight: 1.8, marginBottom: '48px', maxWidth: '800px' }}>
-              Notes from the intersection of IAM, AI, and corporate infrastructure. What I'm learning while building and leading.
-            </p>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {[
-                {
-                  title: 'IAM for AI Agents: Humans, Services, and the Third Thing',
-                  teaser: 'Agents are neither users nor service accounts. Rethinking identity primitives for the LLM era.',
-                  status: 'Drafting'
-                },
-                {
-                  title: 'Why MCP Beats SCIM for Lifecycle Edge Cases',
-                  teaser: 'Rule-based provisioning breaks at the edges. Where MCP fits, where SCIM still wins.',
-                  status: 'Drafting'
-                },
-                {
-                  title: 'Terraform Okta: Patterns I Actually Use',
-                  teaser: 'Moving Okta configuration to code. The wins, the traps, and the patterns worth copying.',
-                  status: 'Planned'
-                }
-              ].map((post, i) => (
-                <article key={i} style={{
-                  padding: '24px 28px',
-                  background: 'rgba(255, 255, 255, 0.02)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                  borderRadius: '8px',
-                  transition: 'all 0.3s ease'
-                }}>
-                  <div style={{
-                    fontFamily: '"IBM Plex Mono", monospace',
-                    fontSize: '0.7rem',
-                    letterSpacing: '2px',
-                    textTransform: 'uppercase',
-                    color: '#71717a',
-                    marginBottom: '8px'
-                  }}>
-                    {post.status}
-                  </div>
-                  <h3 style={{
-                    fontSize: '1.2rem',
-                    fontWeight: 600,
-                    color: '#e4e4e7',
-                    marginBottom: '8px'
-                  }}>
-                    {post.title}
-                  </h3>
-                  <p style={{ color: '#a1a1aa', fontSize: '0.95rem', lineHeight: 1.6 }}>
-                    {post.teaser}
-                  </p>
-                </article>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* What I Steward */}
-        <section id="trajectory" style={{ padding: '80px 40px', maxWidth: '1200px', margin: '0 auto' }}>
-          <div className="section-title">Domain</div>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 600, marginBottom: '24px', color: '#e4e4e7' }}>
-            What I Steward
-          </h2>
-          <p style={{ color: '#a1a1aa', fontSize: '1.05rem', lineHeight: 1.8, marginBottom: '48px', maxWidth: '800px' }}>
-            Leading Corporate Applications Infrastructure at Robinhood. I own the identity, cloud, and collaboration
-            stack that CorpEng runs on. My mandate: harden the foundation, enable AI adoption, and keep things from sprawling.
+        {/* Trajectory · What I Steward */}
+        <section id="trajectory" className="section" aria-labelledby="trajectory-h">
+          <Eyebrow chapter="03" label="SCOPE" />
+          <h2 id="trajectory-h" className="section-headline">Stewardship.</h2>
+          <p className="section-lede">
+            I own the identity, cloud, and collaboration stack that the company runs on at Robinhood.
+            The mandate: harden the foundation, make AI tooling adoptable, and keep things from sprawling.
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '24px' }}>
-            {[
-              { area: 'Okta Identity Infrastructure', desc: 'IAM ownership, Terraform-driven config, lifecycle automation' },
-              { area: 'GCP Governance', desc: 'CorpEng cloud access, AI workload hosting, sprawl prevention' },
-              { area: 'Google Workspace', desc: 'Secure administration, access policies, enterprise collaboration' },
-              { area: 'Technical Leadership', desc: 'Lifecycle governance (EDDs/PRDs), TRA authorship, tech debt execution' },
-            ].map((item, i) => (
-              <div key={i} style={{
-                padding: '24px',
-                background: 'rgba(255, 255, 255, 0.02)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '8px'
-              }}>
-                <div style={{
-                  fontFamily: '"IBM Plex Mono", monospace',
-                  fontSize: '0.75rem',
-                  color: '#22d3ee',
-                  marginBottom: '8px',
-                  letterSpacing: '1px'
-                }}>
-                  {String(i + 1).padStart(2, '0')}
-                </div>
-                <h4 style={{ color: '#e4e4e7', marginBottom: '8px', fontSize: '1.1rem' }}>{item.area}</h4>
-                <p style={{ color: '#a1a1aa', fontSize: '0.9rem', lineHeight: 1.6 }}>{item.desc}</p>
-              </div>
+          <div className="steward-grid">
+            {stewardship.map((item, i) => (
+              <article key={i} className="steward-card">
+                <span className="steward-num">{String(i + 1).padStart(2, '0')}</span>
+                <h4>{item.area}</h4>
+                <p>{item.desc}</p>
+              </article>
             ))}
           </div>
         </section>
 
-        {/* How I Work — fix #6: added id="philosophy" */}
-        <section id="philosophy" style={{ padding: '80px 40px', maxWidth: '1200px', margin: '0 auto' }}>
-          <div className="section-title">Philosophy</div>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 600, marginBottom: '48px', color: '#e4e4e7' }}>
-            How I Work
-          </h2>
+      </main>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
-            {[
-              { trait: 'Builder Mentality',       desc: 'Comfortable owning zero-to-one. I stand up systems from scratch and iterate as the organization grows, rather than waiting for perfect conditions.' },
-              { trait: 'Systems Thinker',          desc: 'I design IT and security that actually works for people. The best systems feel invisible: reliable, secure, and easy to use.' },
-              { trait: 'Technical Partner',        desc: 'I work hand-in-hand with Engineering and speak their language. Not just a translator, but a true collaborator on architecture and security.' },
-              { trait: 'Pragmatic Strategist',     desc: 'I see the north star and build incremental paths to get there. I know when "good enough for now" is the right move and when to push for more.' },
-              { trait: 'Cross-Functional Operator',desc: 'I partner effectively with People Ops, Finance, Legal, and Engineering to align IT with business needs. Everyone trusts and relies on IT as their partner.' },
-              { trait: 'Calm Under Pressure',      desc: 'Experienced running incident response and keeping people aligned when things go sideways. I set up systems so future incidents are less painful.' },
-            ].map((item, i) => (
-              <div key={i} style={{ borderLeft: '2px solid rgba(34, 211, 238, 0.3)', paddingLeft: '24px' }}>
-                <h4 style={{ color: '#e4e4e7', marginBottom: '12px', fontSize: '1.1rem', fontWeight: 600 }}>
-                  {item.trait}
-                </h4>
-                <p style={{ color: '#a1a1aa', fontSize: '0.95rem', lineHeight: 1.7 }}>{item.desc}</p>
-              </div>
-            ))}
+      {/* Colophon */}
+      <footer className="colophon" aria-label="Site colophon">
+        <dl className="colophon-grid">
+          <div className="colophon-block">
+            <dt>Set in</dt>
+            <dd>Fraunces, Newsreader, Cutive Mono.</dd>
           </div>
-        </section>
+          <div className="colophon-block">
+            <dt>Built with</dt>
+            <dd>React, Vite, Vercel.</dd>
+          </div>
+          <div className="colophon-block">
+            <dt>Built for</dt>
+            <dd>Recruiters, peer engineers, and the family who asks what I actually do.</dd>
+          </div>
+        </dl>
 
-        </main>
-        {/* Footer — fix #3: color was #52525b (~2.9:1) → #a1a1aa */}
-        <footer style={{ padding: '60px 40px', borderTop: '1px solid rgba(255, 255, 255, 0.05)', textAlign: 'center' }}>
-          <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '14px', color: '#a1a1aa' }}>
-            <p style={{ marginBottom: '16px' }}>Built with resilience, reliability, and empowerment in mind.</p>
-            <p>© {new Date().getFullYear()} Manny Flores · San Francisco Bay Area</p>
-          </div>
-        </footer>
-      </div>
+        <div className="colophon-meta">
+          <span>
+            <span className="colophon-mark" aria-hidden="true">●</span>{' '}
+            © {year} Manny Flores · SF Bay Area
+          </span>
+          <span>FIN.</span>
+        </div>
+      </footer>
 
       <Analytics />
       <SpeedInsights />
-    </div>
+      {resumeOpen && <ResumeModal onClose={() => setResumeOpen(false)} />}
+    </>
   );
 };
 
