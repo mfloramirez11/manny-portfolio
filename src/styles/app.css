@@ -262,8 +262,11 @@ button:focus-visible {
               transform 320ms var(--ease-out);
 }
 
-.btn:hover  { --btn-ink: 100%; }
 .btn:active { --btn-ink: 100%; background: linear-gradient(to top, var(--color-accent-strong) 100%, var(--color-accent-strong) 100%); }
+
+@media (hover: hover) {
+  .btn:hover { --btn-ink: 100%; }
+}
 
 .btn-ghost {
   display: inline-flex;
@@ -287,10 +290,12 @@ button:focus-visible {
               transform 320ms var(--ease-out);
 }
 
-.btn-ghost:hover {
-  --ghost-ink: 100%;
-  color: var(--color-bg);
-  border-color: var(--color-text);
+@media (hover: hover) {
+  .btn-ghost:hover {
+    --ghost-ink: 100%;
+    color: var(--color-bg);
+    border-color: var(--color-text);
+  }
 }
 
 @starting-style {
@@ -1192,11 +1197,22 @@ a:hover {
   .writing-num {
     display: none;
   }
+  .stack-tools {
+    margin-top: var(--space-10);
+  }
 }
 
 @media (max-width: 480px) {
   .skills-grid {
     grid-template-columns: 1fr;
+  }
+  .hero-cta-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hero-cta-row .btn,
+  .hero-cta-row .btn-ghost {
+    justify-content: center;
   }
 }
 
