@@ -215,21 +215,7 @@ button:focus-visible {
   position: relative;
 }
 
-.section-headline em::after {
-  content: '';
-  position: absolute;
-  bottom: -3px;
-  left: -2px;
-  right: -2px;
-  height: 5px;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 5" preserveAspectRatio="none"><path d="M0,4 C12,1 25,4.5 38,3 C51,1.5 63,4.5 75,3 C85,1.5 93,4 100,3" fill="none" stroke="%23C46B3A" stroke-width="1.8" stroke-linecap="round"/></svg>') center / 100% 100% no-repeat;
-  clip-path: inset(0 100% 0 0);
-  transition: clip-path 560ms 80ms var(--ease-out);
-}
-
-.section-headline.in-view em::after {
-  clip-path: inset(0 0% 0 0);
-}
+/* Animated underline handled by Framer Motion component */
 
 .section-lede {
   font-family: var(--font-sans);
@@ -247,7 +233,7 @@ button:focus-visible {
   align-items: center;
   gap: var(--space-2);
   padding: 14px 28px;
-  background: linear-gradient(to top, var(--color-accent) var(--btn-ink), var(--color-text) var(--btn-ink));
+  background: var(--color-text);
   color: var(--color-bg);
   text-decoration: none;
   font-family: var(--font-sans);
@@ -257,15 +243,10 @@ button:focus-visible {
   border-radius: var(--radius-md);
   border: none;
   cursor: pointer;
-  transition: --btn-ink var(--motion-base) var(--ease-out),
-              opacity 320ms var(--ease-out),
+  position: relative;
+  overflow: hidden;
+  transition: opacity 320ms var(--ease-out),
               transform 320ms var(--ease-out);
-}
-
-.btn:active { --btn-ink: 100%; background: linear-gradient(to top, var(--color-accent-strong) 100%, var(--color-accent-strong) 100%); }
-
-@media (hover: hover) {
-  .btn:hover { --btn-ink: 100%; }
 }
 
 .btn-ghost {
@@ -273,7 +254,7 @@ button:focus-visible {
   align-items: center;
   gap: var(--space-2);
   padding: 14px 28px;
-  background: linear-gradient(to top, var(--color-text) var(--ghost-ink), transparent var(--ghost-ink));
+  background: transparent;
   color: var(--color-text);
   text-decoration: none;
   font-family: var(--font-sans);
@@ -283,19 +264,11 @@ button:focus-visible {
   border-radius: var(--radius-md);
   border: 1.5px solid var(--color-text);
   cursor: pointer;
-  transition: --ghost-ink var(--motion-base) var(--ease-out),
-              color var(--motion-base) var(--ease-out),
-              border-color var(--motion-base) var(--ease-out),
+  position: relative;
+  overflow: hidden;
+  transition: border-color var(--motion-base) var(--ease-out),
               opacity 320ms var(--ease-out),
               transform 320ms var(--ease-out);
-}
-
-@media (hover: hover) {
-  .btn-ghost:hover {
-    --ghost-ink: 100%;
-    color: var(--color-bg);
-    border-color: var(--color-text);
-  }
 }
 
 @starting-style {
@@ -345,6 +318,7 @@ button:focus-visible {
 
 .chip:hover {
   border-color: var(--color-accent);
+  color: var(--color-accent);
 }
 
 .skill-tag {
@@ -386,20 +360,11 @@ button:focus-visible {
 }
 
 .expertise-card {
-  background: var(--color-bg);
+  background: var(--color-bg-2);
   color: var(--color-text);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: var(--space-8);
-  transition: transform var(--motion-base) var(--ease-out),
-              border-color var(--motion-base) var(--ease-out),
-              box-shadow var(--motion-base) var(--ease-out);
-}
-
-.expertise-card:hover {
-  transform: translateY(-1px);
-  border-color: rgba(28, 24, 22, 0.30);
-  box-shadow: var(--shadow-hover);
 }
 
 .expertise-card .expertise-num {
@@ -435,6 +400,9 @@ button:focus-visible {
   list-style: none;
   padding: 0;
   margin: 0;
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: var(--space-4);
+  margin-top: var(--space-4);
 }
 
 .expertise-card li {
@@ -443,7 +411,7 @@ button:focus-visible {
   font-weight: 400;
   line-height: 1.65;
   color: var(--color-text);
-  padding-left: var(--space-4);
+  padding-left: var(--space-6);
   position: relative;
   margin-bottom: var(--space-2);
 }
@@ -456,19 +424,12 @@ button:focus-visible {
 }
 
 .project-card {
-  background: var(--color-bg);
+  background: var(--color-bg-2);
   color: var(--color-text);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: var(--space-10) var(--space-9);
   position: relative;
-  transition: border-color var(--motion-base) var(--ease-out),
-              box-shadow var(--motion-base) var(--ease-out);
-}
-
-.project-card:hover {
-  border-color: rgba(28, 24, 22, 0.30);
-  box-shadow: var(--shadow-hover);
 }
 
 .project-status {
@@ -870,15 +831,10 @@ button:focus-visible {
 }
 
 .steward-card {
-  background: var(--color-bg);
+  background: var(--color-bg-2);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: var(--space-7);
-  transition: border-color var(--motion-base) var(--ease-out);
-}
-
-.steward-card:hover {
-  border-color: rgba(28, 24, 22, 0.30);
 }
 
 .steward-card h4 {

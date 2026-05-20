@@ -1,44 +1,43 @@
 :root {
   /* ──────────────────────────────────────────────
-     COLORS · Roma / Feria Direction 07
+     COLORS · Roma / Feria Direction 07 (Light Mode)
      Paper · Ink · Clay · Forest · Mustard · Museum Rose
      ────────────────────────────────────────────── */
-  --color-bg: #F5EFE3;          /* Roma Paper · editorial page surface */
-  --color-bg-2: #EFE8D8;        /* ink scale step 6 */
-  --color-bg-emphasis: #1C1816; /* Roma Ink · inverted surfaces */
+  --color-bg: oklch(95.2% 0.017 77);          /* Roma Paper · warm parchment surface */
+  --color-bg-2: oklch(92.0% 0.022 77);        /* Paper-2 · ink scale step 6 */
+  --color-bg-emphasis: oklch(17.5% 0.014 50); /* Roma Ink · inverted surfaces */
 
-  --color-surface: #F5EFE3;
-  --color-surface-hover: #EFE8D8;
+  --color-surface: oklch(95.2% 0.017 77);
+  --color-surface-hover: oklch(92.0% 0.022 77);
 
   --color-border: rgba(28, 24, 22, 0.22);
   --color-border-subtle: rgba(28, 24, 22, 0.12);
-  --color-border-strong: #1C1816;
+  --color-border-strong: oklch(17.5% 0.014 50);
 
-  --color-text: #1C1816;         /* Roma Ink */
-  --color-text-muted: #4B4238;   /* ink scale step 2 */
-  --color-text-subtle: #8B7F6E;  /* ink scale step 3 */
-  --color-text-on-emphasis: #F5EFE3;
+  --color-text: oklch(17.5% 0.014 50);         /* Roma Ink */
+  --color-text-muted: oklch(37.5% 0.012 50);   /* Ink Mid */
+  --color-text-subtle: oklch(57.5% 0.012 50);  /* Ink Subtle */
+  --color-text-on-emphasis: oklch(95.2% 0.017 77);
 
-  --color-accent: #C46B3A;       /* Roma Clay · brand stamp, italics, the dot */
-  --color-accent-strong: #A35828;
+  --color-accent: oklch(57.5% 0.150 42);       /* Roma Clay / Tezontle · brand stamp */
+  --color-accent-strong: oklch(47.5% 0.130 42); /* Tezontle Strong */
   --color-accent-bg: rgba(196, 107, 58, 0.08);
   --color-accent-bg-hover: rgba(196, 107, 58, 0.12);
   --color-accent-border: rgba(196, 107, 58, 0.30);
   --color-accent-border-strong: rgba(196, 107, 58, 0.55);
   --color-accent-ring: rgba(196, 107, 58, 0.30);
 
-  --color-tezontle: #C46B3A;      /* Clay alias · eyebrow dot, stamp */
-  --color-ceiba: #2F5544;         /* Roma Forest · settled / paid / safe */
-  --color-maiz: #C89A3A;          /* Roma Mustard · warning / heads-up */
+  --color-tezontle: oklch(57.5% 0.150 42);
+  --color-ceiba: oklch(37.5% 0.075 160);         /* Roma Forest · success / paid / safe */
+  --color-maiz: oklch(70.0% 0.130 80);          /* Roma Mustard · building / warnings */
 
-  /* Heritage palette · papel-picado ribbon stays always.
-     Museum Rose replaces rosa as urgency / heritage stripe. */
-  --color-rosa: #B5495A;          /* Roma Museum Rose · heritage ribbon + urgency */
-  --color-rosa-deep: #8F3344;
-  --color-cobalto: #1E4FA6;       /* Talavera Cobalt · heritage ribbon */
-  --color-cacao: #1C1816;         /* Roma Ink alias */
+  /* Heritage palette · papel-picado ribbon stays always. */
+  --color-rosa: oklch(47.0% 0.115 14);          /* Roma Museum Rose · heritage ribbon */
+  --color-rosa-deep: oklch(35.0% 0.100 14);
+  --color-cobalto: oklch(38.5% 0.165 264);       /* Talavera Cobalt · heritage ribbon */
+  --color-cacao: oklch(17.5% 0.014 50);          /* Roma Ink alias */
 
-  --color-success: #2F5544;       /* alias for ceiba/forest */
+  --color-success: oklch(37.5% 0.075 160);       /* Ceiba Forest alias */
 
   /* ──────────────────────────────────────────────
      SPACING · 4px base
@@ -71,7 +70,7 @@
 
   /* ──────────────────────────────────────────────
      TYPOGRAPHY · Roma Direction
-     Display: Fraunces · high-opsz editorial serif, weight 400
+     Display: Fraunces · high-opsz editorial serif
      Body:    Newsreader · running serif, designed for screen
      Mono:    Cutive Mono · receipt / metadata / labels
      ────────────────────────────────────────────── */
@@ -115,9 +114,102 @@
   --container-narrow: 720px;
   --measure: 65ch;
 
-  /* Fallback values for @property animated custom props.
-     Without @property support these ensure a sensible default
-     so buttons render correctly (no animation, but correct appearance). */
+  /* Fallback values for @property animated custom props. */
   --btn-ink: -2%;
   --ghost-ink: -2%;
+}
+
+/* ──────────────────────────────────────────────
+   DARK MODE · Roma / Feria Direction 07 (Dark Mode)
+   Pristine OKLCH-tinted neutrals towards clay brand hue.
+   Absolutely no absolute #000 or #fff.
+   Supporting system media queries & manual .dark class.
+   ────────────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --color-bg: oklch(14.5% 0.014 50);          /* Deep clay-tinted charcoal base background */
+    --color-bg-2: oklch(18.5% 0.014 50);        /* Slightly lighter clay charcoal for secondary bg */
+    --color-bg-emphasis: oklch(95.2% 0.017 77); /* Inverted surfaces are warm parchment */
+
+    --color-surface: oklch(14.5% 0.014 50);
+    --color-surface-hover: oklch(18.5% 0.014 50);
+
+    /* Borders use translucent warm parchment */
+    --color-border: oklch(95.2% 0.017 77 / 22%);
+    --color-border-subtle: oklch(95.2% 0.017 77 / 12%);
+    --color-border-strong: oklch(95.2% 0.017 77);
+
+    --color-text: oklch(95.2% 0.017 77);         /* Warm parchment text for pristine legibility */
+    --color-text-muted: oklch(75.2% 0.015 77);   /* Muted warm parchment */
+    --color-text-subtle: oklch(55.2% 0.012 77);  /* Subtle warm parchment */
+    --color-text-on-emphasis: oklch(14.5% 0.014 50);
+
+    /* Accents are slightly lightened/vibrant clay brand colors for enhanced dark contrast */
+    --color-accent: oklch(62.5% 0.150 42);       /* Tezontle clay stamp, contrast-tuned */
+    --color-accent-strong: oklch(52.5% 0.130 42); /* Active state */
+    --color-accent-bg: oklch(62.5% 0.150 42 / 12%);
+    --color-accent-bg-hover: oklch(62.5% 0.150 42 / 18%);
+    --color-accent-border: oklch(62.5% 0.150 42 / 35%);
+    --color-accent-border-strong: oklch(62.5% 0.150 42 / 60%);
+    --color-accent-ring: oklch(62.5% 0.150 42 / 40%);
+
+    --color-tezontle: oklch(62.5% 0.150 42);
+    --color-ceiba: oklch(45.5% 0.075 160);       /* Forestry Green, contrast-tuned */
+    --color-maiz: oklch(74.0% 0.130 80);        /* Mustard Yellow, contrast-tuned */
+
+    --color-rosa: oklch(54.0% 0.115 14);        /* Museum Rose, contrast-tuned */
+    --color-rosa-deep: oklch(42.0% 0.100 14);
+    --color-cobalto: oklch(48.5% 0.165 264);     /* Talavera Cobalt, contrast-tuned */
+    --color-cacao: oklch(95.2% 0.017 77);        /* Ink alias matches warm parchment */
+
+    --color-success: oklch(45.5% 0.075 160);
+
+    /* Invert card and UI hover shadows to be lighter/softer against dark charcoal */
+    --shadow-hover: 0 1px 0 oklch(95.2% 0.017 77 / 6%), 0 6px 16px -8px oklch(95.2% 0.017 77 / 10%);
+    --shadow-sm: 0 1px 0 oklch(95.2% 0.017 77 / 4%);
+  }
+}
+
+/* Manual .dark class override takes absolute precedence */
+.dark, :root.dark {
+  --color-bg: oklch(14.5% 0.014 50);          /* Deep clay-tinted charcoal base background */
+  --color-bg-2: oklch(18.5% 0.014 50);        /* Slightly lighter clay charcoal for secondary bg */
+  --color-bg-emphasis: oklch(95.2% 0.017 77); /* Inverted surfaces are warm parchment */
+
+  --color-surface: oklch(14.5% 0.014 50);
+  --color-surface-hover: oklch(18.5% 0.014 50);
+
+  /* Borders use translucent warm parchment */
+  --color-border: oklch(95.2% 0.017 77 / 22%);
+  --color-border-subtle: oklch(95.2% 0.017 77 / 12%);
+  --color-border-strong: oklch(95.2% 0.017 77);
+
+  --color-text: oklch(95.2% 0.017 77);         /* Warm parchment text for pristine legibility */
+  --color-text-muted: oklch(75.2% 0.015 77);   /* Muted warm parchment */
+  --color-text-subtle: oklch(55.2% 0.012 77);  /* Subtle warm parchment */
+  --color-text-on-emphasis: oklch(14.5% 0.014 50);
+
+  /* Accents are slightly lightened/vibrant clay brand colors for enhanced dark contrast */
+  --color-accent: oklch(62.5% 0.150 42);       /* Tezontle clay stamp, contrast-tuned */
+  --color-accent-strong: oklch(52.5% 0.130 42); /* Active state */
+  --color-accent-bg: oklch(62.5% 0.150 42 / 12%);
+  --color-accent-bg-hover: oklch(62.5% 0.150 42 / 18%);
+  --color-accent-border: oklch(62.5% 0.150 42 / 35%);
+  --color-accent-border-strong: oklch(62.5% 0.150 42 / 60%);
+  --color-accent-ring: oklch(62.5% 0.150 42 / 40%);
+
+  --color-tezontle: oklch(62.5% 0.150 42);
+  --color-ceiba: oklch(45.5% 0.075 160);       /* Forestry Green, contrast-tuned */
+  --color-maiz: oklch(74.0% 0.130 80);        /* Mustard Yellow, contrast-tuned */
+
+  --color-rosa: oklch(54.0% 0.115 14);        /* Museum Rose, contrast-tuned */
+  --color-rosa-deep: oklch(42.0% 0.100 14);
+  --color-cobalto: oklch(48.5% 0.165 264);     /* Talavera Cobalt, contrast-tuned */
+  --color-cacao: oklch(95.2% 0.017 77);        /* Ink alias matches warm parchment */
+
+  --color-success: oklch(45.5% 0.075 160);
+
+  /* Invert card and UI hover shadows to be lighter/softer against dark charcoal */
+  --shadow-hover: 0 1px 0 oklch(95.2% 0.017 77 / 6%), 0 6px 16px -8px oklch(95.2% 0.017 77 / 10%);
+  --shadow-sm: 0 1px 0 oklch(95.2% 0.017 77 / 4%);
 }

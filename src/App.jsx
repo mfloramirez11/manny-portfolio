@@ -1,6 +1,13 @@
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import ResumeDialog from './components/ResumeDialog';
+import ExpertiseCard from './components/ExpertiseCard';
+import ProjectCard from './components/ProjectCard';
+import StewardCard from './components/StewardCard';
+import ThemeToggle from './components/ThemeToggle';
+import FramerButton from './components/FramerButton';
 
 const IconArrow = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -8,7 +15,6 @@ const IconArrow = () => (
     <polyline points="12 5 19 12 12 19" />
   </svg>
 );
-
 
 const Eyebrow = ({ chapter, label }) => (
   <div className={`eyebrow${chapter ? ` eyebrow-ch-${chapter}` : ''}`}>
@@ -27,42 +33,72 @@ const NAV_SECTIONS = [
   { id: 'trajectory', label: 'stewardship' },
 ];
 
-const ResumeModal = ({ onClose }) => {
-  const closeRef = useRef(null);
-
-  useEffect(() => {
-    const prev = document.activeElement;
-    closeRef.current?.focus();
-    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
-    document.addEventListener('keydown', onKey);
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = '';
-      prev?.focus();
-    };
-  }, [onClose]);
-
+const AnimatedUnderline = () => {
+  const shouldReduceMotion = useReducedMotion();
+  
   return (
-    <div className="resume-overlay" role="dialog" aria-modal="true" aria-label="Resume viewer" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="resume-panel">
-        <div className="resume-panel-header">
-          <span className="resume-panel-title">Manny Flores · Resume</span>
-          <div className="resume-panel-actions">
-            <a href="/resume.pdf" download="Manny_Flores_Resume_2026.pdf" className="btn-ghost resume-download-btn">Download</a>
-            <button ref={closeRef} className="resume-close-btn" onClick={onClose} aria-label="Close resume">✕</button>
-          </div>
-        </div>
-        <iframe src="/resume.pdf#navpanes=0&toolbar=0" className="resume-iframe" title="Manny Flores Resume" />
-      </div>
-    </div>
+    <svg 
+      className="absolute left-[-2px] right-[-2px] bottom-[-2px] w-[calc(100%+4px)] h-[5px] pointer-events-none" 
+      viewBox="0 0 100 5" 
+      preserveAspectRatio="none"
+      aria-hidden="true"
+    >
+      <motion.path
+        d="M0,4 C12,1 25,4.5 38,3 C51,1.5 63,4.5 75,3 C85,1.5 93,4 100,3"
+        fill="none"
+        stroke="var(--color-accent)"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        initial={{ pathLength: 0 }}
+        whileInView={{ pathLength: 1 }}
+        viewport={{ once: true, margin: "-5%" }}
+        transition={
+          shouldReduceMotion 
+            ? { duration: 0.01 }
+            : { duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.2 }
+        }
+      />
+    </svg>
   );
+};
+
+const faderVariants = (shouldReduceMotion) => shouldReduceMotion ? {
+  hidden: { opacity: 1, y: 0 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.01 } }
+} : {
+  hidden: { opacity: 0, y: 15 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.165, 0.84, 0.44, 1],
+    }
+  }
+};
+
+const staggerContainer = (shouldReduceMotion) => ({
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: shouldReduceMotion ? 0.01 : 0.08,
+    }
+  }
+});
+
+const portraitVariants = (shouldReduceMotion) => shouldReduceMotion ? {
+  hidden: { opacity: 1, scale: 1 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.01 } }
+} : {
+  hidden: { opacity: 0, scale: 0.96 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: [0.165, 0.84, 0.44, 1] } }
 };
 
 const App = () => {
   const [activeSection, setActiveSection] = useState('about');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [resumeOpen, setResumeOpen] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
 
   // Sync active nav item to scroll position
   useEffect(() => {
@@ -99,18 +135,6 @@ const App = () => {
     return () => window.removeEventListener('keydown', onKey);
   }, [isMenuOpen]);
 
-  // Headline underline draw-in on scroll
-  useEffect(() => {
-    const els = document.querySelectorAll('.section-headline');
-    const obs = new IntersectionObserver(
-      (entries) => entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('in-view'); obs.unobserve(e.target); }
-      }),
-      { rootMargin: '-5% 0px -5% 0px', threshold: 0.2 }
-    );
-    els.forEach(el => obs.observe(el));
-    return () => obs.disconnect();
-  }, []);
 
   useEffect(() => {
     const hash = window.location.hash.slice(1);
@@ -238,28 +262,32 @@ const App = () => {
             mannyflo.
           </button>
 
-          <div className="nav-desktop">
-            {NAV_SECTIONS.map(({ id, label }) => (
-              <button
-                key={id}
-                className={`nav-item ${activeSection === id ? 'active' : ''}`}
-                onClick={() => scrollToSection(id)}
-                aria-current={activeSection === id ? 'page' : undefined}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
+          <div className="flex items-center gap-4">
+            <div className="nav-desktop">
+              {NAV_SECTIONS.map(({ id, label }) => (
+                <button
+                  key={id}
+                  className={`nav-item ${activeSection === id ? 'active' : ''}`}
+                  onClick={() => scrollToSection(id)}
+                  aria-current={activeSection === id ? 'page' : undefined}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
 
-          <button
-            className={`hamburger ${isMenuOpen ? 'open' : ''}`}
-            onClick={() => setIsMenuOpen(o => !o)}
-            aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={isMenuOpen}
-            aria-controls="mobile-nav"
-          >
-            <span /><span /><span />
-          </button>
+            <ThemeToggle />
+
+            <button
+              className={`hamburger ${isMenuOpen ? 'open' : ''}`}
+              onClick={() => setIsMenuOpen(o => !o)}
+              aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-nav"
+            >
+              <span /><span /><span />
+            </button>
+          </div>
         </nav>
       </header>
 
@@ -284,42 +312,56 @@ const App = () => {
 
       <main id="main">
         {/* Hero / About */}
-        <section id="about" className="hero" aria-labelledby="hero-name">
+        <motion.section 
+          id="about" 
+          className="hero" 
+          aria-labelledby="hero-name"
+          variants={staggerContainer(shouldReduceMotion)}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-10%" }}
+        >
           <div className="hero-grid">
-            <div>
-              <Eyebrow label="ENGINEER" />
+            <motion.div variants={staggerContainer(shouldReduceMotion)}>
+              <motion.div variants={faderVariants(shouldReduceMotion)}>
+                <Eyebrow label="ENGINEER" />
+              </motion.div>
 
-              <h1 id="hero-name" className="hero-name">Manny Flores</h1>
-              <p className="hero-role">Senior Systems Engineer</p>
+              <motion.h1 id="hero-name" className="hero-name" variants={faderVariants(shouldReduceMotion)}>
+                Manny Flores
+              </motion.h1>
+              <motion.p className="hero-role" variants={faderVariants(shouldReduceMotion)}>
+                Senior Systems Engineer
+              </motion.p>
 
-              <p className="hero-lede">
+              <motion.p className="hero-lede" variants={faderVariants(shouldReduceMotion)}>
                 I run the <span className="accent">identity and corporate apps infrastructure</span>{' '}
                 at Robinhood: Okta, GCP, Google Workspace. Lately my focus has been identity and
                 access management: making AI tooling adoptable across the company without losing
                 control of who can do what.
-              </p>
+              </motion.p>
 
-              <div className="hero-cta-row">
-                <a href="mailto:manny@flores.network" className="btn">
+              <motion.div className="hero-cta-row" variants={faderVariants(shouldReduceMotion)}>
+                <FramerButton href="mailto:manny@flores.network">
                   Get in Touch <IconArrow />
-                </a>
-                <a
+                </FramerButton>
+                <FramerButton
                   href="https://linkedin.com/in/mannyflores11"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-ghost"
+                  variant="ghost"
                 >
                   LinkedIn
-                </a>
-                <button
-                  className="btn-ghost"
+                </FramerButton>
+                <FramerButton
+                  variant="ghost"
                   onClick={() => setResumeOpen(true)}
                 >
                   Resume
-                </button>
-              </div>
+                </FramerButton>
+              </motion.div>
 
-              <div className="hero-meta" aria-label="Current role and location">
+              <motion.div className="hero-meta" aria-label="Current role and location" variants={faderVariants(shouldReduceMotion)}>
                 <span className="hero-meta-mark" aria-hidden="true">●</span>
                 <span>Robinhood</span>
                 <span className="hero-meta-sep" aria-hidden="true">·</span>
@@ -328,114 +370,147 @@ const App = () => {
                 <span>SF Bay Area</span>
                 <span className="hero-meta-sep" aria-hidden="true">·</span>
                 <span>2024 to present</span>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
-            <img
+            <motion.img
               src="/profile2.png"
               alt="Portrait of Manny Flores"
               className="hero-portrait"
               width="240"
               height="240"
               loading="eager"
-              fetchpriority="high"
+              fetchPriority="high"
               decoding="async"
+              variants={portraitVariants(shouldReduceMotion)}
             />
           </div>
-        </section>
+        </motion.section>
 
         {/* Stack · Expertise + Tools */}
-        <section id="stack" className="section" aria-labelledby="stack-h">
-          <Eyebrow chapter="01" label="STACK" />
-          <h2 id="stack-h" className="section-headline">Stack.</h2>
+        <motion.section 
+          id="stack" 
+          className="section" 
+          aria-labelledby="stack-h"
+          variants={staggerContainer(shouldReduceMotion)}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-10%" }}
+        >
+          <motion.div variants={faderVariants(shouldReduceMotion)}>
+            <Eyebrow chapter="01" label="STACK" />
+          </motion.div>
+          <motion.h2 id="stack-h" className="section-headline" variants={faderVariants(shouldReduceMotion)}>
+            Stack.
+          </motion.h2>
 
-          <div className="expertise-grid">
+          <motion.div className="expertise-grid" variants={staggerContainer(shouldReduceMotion)}>
             {expertise.map((item, index) => (
-              <article key={index} className="expertise-card">
-                <span className="expertise-num" aria-hidden="true">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-                <ul>
-                  {item.details.map((detail, i) => (
-                    <li key={i}>{detail}</li>
-                  ))}
-                </ul>
-              </article>
+              <motion.div key={index} variants={faderVariants(shouldReduceMotion)}>
+                <ExpertiseCard
+                  num={String(index + 1).padStart(2, '0')}
+                  title={item.title}
+                  description={item.description}
+                  details={item.details}
+                />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
 
-          <div className="stack-tools">
+          <motion.div className="stack-tools" variants={faderVariants(shouldReduceMotion)}>
             <div className="stack-tools-label">
               <span className="stack-tools-label-bar" aria-hidden="true" />
               TOOLS
             </div>
-            <div className="skills-grid">
+            <motion.div className="skills-grid" variants={staggerContainer(shouldReduceMotion)}>
               {skills.map((group, index) => (
-              <div key={index}>
-                <div className="skill-group-title">
-                  <span className="skill-group-bar" aria-hidden="true" />
-                  {group.category}
-                </div>
-                <div>
-                  {group.items.map((skill, i) => (
-                    <span key={i} className="skill-tag">{skill}</span>
-                  ))}
-                </div>
-              </div>
-            ))}
-            </div>
-          </div>
-        </section>
+                <motion.div key={index} variants={faderVariants(shouldReduceMotion)}>
+                  <div className="skill-group-title">
+                    <span className="skill-group-bar" aria-hidden="true" />
+                    {group.category}
+                  </div>
+                  <motion.div className="flex flex-wrap gap-1" variants={staggerContainer(shouldReduceMotion)}>
+                    {group.items.map((skill, i) => (
+                      <motion.span 
+                        key={i} 
+                        className="skill-tag"
+                        variants={faderVariants(shouldReduceMotion)}
+                      >
+                        {skill}
+                      </motion.span>
+                    ))}
+                  </motion.div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.div>
+        </motion.section>
 
         {/* Projects · Currently Building */}
-        <section id="projects" className="section" aria-labelledby="projects-h">
-          <Eyebrow chapter="02" label="CURRENT FOCUS" />
-          <h2 id="projects-h" className="section-headline">In the <em>making</em>.</h2>
+        <motion.section 
+          id="projects" 
+          className="section" 
+          aria-labelledby="projects-h"
+          variants={staggerContainer(shouldReduceMotion)}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-10%" }}
+        >
+          <motion.div variants={faderVariants(shouldReduceMotion)}>
+            <Eyebrow chapter="02" label="CURRENT FOCUS" />
+          </motion.div>
+          <motion.h2 id="projects-h" className="section-headline relative inline-block" variants={faderVariants(shouldReduceMotion)}>
+            In the <em>making<AnimatedUnderline /></em>.
+          </motion.h2>
 
-          <div className="project-list">
+          <motion.div className="project-list" variants={staggerContainer(shouldReduceMotion)}>
             {currentProjects.map((project, index) => (
-              <article
-                key={index}
-                className="project-card"
-                data-status={project.status.toLowerCase()}
-              >
-                <div className="project-status">
-                  <span className="status-dot" aria-hidden="true" />
-                  <span className="project-status-label">{project.status}</span>
-                </div>
-                <h3>{project.title}</h3>
-                <p>{project.description}</p>
-                <div className="project-tags">
-                  {project.tags.map((tag, i) => (
-                    <span key={i} className="chip">{tag}</span>
-                  ))}
-                </div>
-              </article>
+              <motion.div key={index} variants={faderVariants(shouldReduceMotion)}>
+                <ProjectCard
+                  title={project.title}
+                  status={project.status}
+                  description={project.description}
+                  tags={project.tags}
+                />
+              </motion.div>
             ))}
-          </div>
-        </section>
+          </motion.div>
+        </motion.section>
 
         {/* Trajectory · What I Steward */}
-        <section id="trajectory" className="section" aria-labelledby="trajectory-h">
-          <Eyebrow chapter="03" label="SCOPE" />
-          <h2 id="trajectory-h" className="section-headline">Stewardship.</h2>
-          <p className="section-lede">
+        <motion.section 
+          id="trajectory" 
+          className="section" 
+          aria-labelledby="trajectory-h"
+          variants={staggerContainer(shouldReduceMotion)}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-10%" }}
+        >
+          <motion.div variants={faderVariants(shouldReduceMotion)}>
+            <Eyebrow chapter="03" label="SCOPE" />
+          </motion.div>
+          <motion.h2 id="trajectory-h" className="section-headline" variants={faderVariants(shouldReduceMotion)}>
+            Stewardship.
+          </motion.h2>
+          <motion.p className="section-lede" variants={faderVariants(shouldReduceMotion)}>
             I own the identity, cloud, and collaboration stack that the company runs on at Robinhood.
             The mandate: harden the foundation, make AI tooling adoptable, and keep things from sprawling.
-          </p>
+          </motion.p>
 
-          <div className="steward-grid">
+          <motion.div className="steward-grid" variants={staggerContainer(shouldReduceMotion)}>
             {stewardship.map((item, i) => (
-              <article key={i} className="steward-card">
-                <span className="steward-num">{String(i + 1).padStart(2, '0')}</span>
-                <h4>{item.area}</h4>
-                <p>{item.desc}</p>
-              </article>
+              <motion.div key={i} variants={faderVariants(shouldReduceMotion)}>
+                <StewardCard
+                  num={String(i + 1).padStart(2, '0')}
+                  area={item.area}
+                  description={item.desc}
+                />
+              </motion.div>
             ))}
-          </div>
-        </section>
+          </motion.div>
+        </motion.section>
+
 
       </main>
 
@@ -467,7 +542,7 @@ const App = () => {
 
       <Analytics />
       <SpeedInsights />
-      {resumeOpen && <ResumeModal onClose={() => setResumeOpen(false)} />}
+      <ResumeDialog open={resumeOpen} onOpenChange={setResumeOpen} />
     </>
   );
 };

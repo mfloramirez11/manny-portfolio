@@ -28,8 +28,8 @@ describe('App', () => {
     const nav = screen.getByRole('navigation', { name: /main navigation/i })
     const navButtons = within(nav).getAllByRole('button')
     const labels = navButtons.map(b => b.textContent.trim().toLowerCase())
-    for (const id of ['about', 'expertise', 'skills', 'projects', 'writing', 'trajectory', 'work']) {
-      expect(labels).toContain(id)
+    for (const label of ['about', 'stack', 'projects', 'stewardship']) {
+      expect(labels).toContain(label)
     }
   })
 
@@ -62,9 +62,9 @@ describe('App', () => {
     const user = userEvent.setup()
     render(<App />)
     const nav = screen.getByRole('navigation', { name: /main navigation/i })
-    const expertiseBtn = within(nav).getByRole('button', { name: 'expertise' })
-    await user.click(expertiseBtn)
-    expect(window.location.hash).toBe('#expertise')
+    const stackBtn = within(nav).getByRole('button', { name: 'stack' })
+    await user.click(stackBtn)
+    expect(window.location.hash).toBe('#stack')
   })
 
   it('renders the footer with the current year', () => {

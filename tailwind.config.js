@@ -1,0 +1,95 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx,css}",
+  ],
+  darkMode: "class",
+  theme: {
+    // Override the default colors to strictly use our custom theme palette.
+    // Preventing any default tailwind colors (like red-500, gray-800) from being used.
+    colors: {
+      transparent: "transparent",
+      current: "currentColor",
+      bg: "var(--color-bg)",
+      "bg-2": "var(--color-bg-2)",
+      "bg-emphasis": "var(--color-bg-emphasis)",
+      surface: "var(--color-surface)",
+      "surface-hover": "var(--color-surface-hover)",
+      border: "var(--color-border)",
+      "border-subtle": "var(--color-border-subtle)",
+      "border-strong": "var(--color-border-strong)",
+      text: "var(--color-text)",
+      "text-muted": "var(--color-text-muted)",
+      "text-subtle": "var(--color-text-subtle)",
+      "text-on-emphasis": "var(--color-text-on-emphasis)",
+      accent: "var(--color-accent)",
+      "accent-strong": "var(--color-accent-strong)",
+      "accent-bg": "var(--color-accent-bg)",
+      "accent-bg-hover": "var(--color-accent-bg-hover)",
+      "accent-border": "var(--color-accent-border)",
+      "accent-border-strong": "var(--color-accent-border-strong)",
+      "accent-ring": "var(--color-accent-ring)",
+      tezontle: "var(--color-tezontle)",
+      ceiba: "var(--color-ceiba)",
+      maiz: "var(--color-maiz)",
+      rosa: "var(--color-rosa)",
+      "rosa-deep": "var(--color-rosa-deep)",
+      cobalto: "var(--color-cobalto)",
+      cacao: "var(--color-cacao)",
+      success: "var(--color-success)",
+    },
+    // Custom font definitions mapping display, sans, and mono to Fraunces, Newsreader, and Cutive Mono
+    fontFamily: {
+      display: ["Fraunces", "Charter", "Georgia", "serif"],
+      sans: ["Newsreader", "Georgia", "Times New Roman", "serif"],
+      mono: ["Cutive Mono", "ui-monospace", "SF Mono", "Menlo", "monospace"],
+    },
+    // Custom radii mapping to design tokens
+    borderRadius: {
+      none: "var(--radius-none)",
+      sm: "var(--radius-sm)",
+      md: "var(--radius-md)",
+      lg: "var(--radius-lg)",
+      xl: "var(--radius-xl)",
+      pill: "var(--radius-pill)",
+      full: "var(--radius-full)",
+    },
+    extend: {
+      spacing: {
+        "space-1": "var(--space-1)",
+        "space-2": "var(--space-2)",
+        "space-3": "var(--space-3)",
+        "space-4": "var(--space-4)",
+        "space-5": "var(--space-5)",
+        "space-6": "var(--space-6)",
+        "space-7": "var(--space-7)",
+        "space-8": "var(--space-8)",
+        "space-9": "var(--space-9)",
+        "space-10": "var(--space-10)",
+        "space-12": "var(--space-12)",
+        "space-14": "var(--space-14)",
+        "space-20": "var(--space-20)",
+        "space-24": "var(--space-24)",
+      },
+      transitionProperty: {
+        "btn": "var(--btn-ink), opacity, transform",
+        "ghost": "var(--ghost-ink), color, border-color, opacity, transform",
+      },
+      transitionTimingFunction: {
+        "ease-out": "var(--ease-out)",
+        "ease-in-out": "var(--ease-in-out)",
+      },
+      transitionDuration: {
+        "fast": "var(--motion-fast)",
+        "base": "var(--motion-base)",
+        "slow": "var(--motion-slow)",
+      },
+      boxShadow: {
+        "hover": "var(--shadow-hover)",
+        "sm": "var(--shadow-sm)",
+      },
+    },
+  },
+  plugins: [],
+};
