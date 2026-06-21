@@ -368,8 +368,6 @@ const App = () => {
                 <span>Corporate Apps Infra</span>
                 <span className="hero-meta-sep" aria-hidden="true">·</span>
                 <span>SF Bay Area</span>
-                <span className="hero-meta-sep" aria-hidden="true">·</span>
-                <span>2024 to present</span>
               </motion.div>
             </motion.div>
 
