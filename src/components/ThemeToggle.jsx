@@ -9,9 +9,11 @@ export default function ThemeToggle() {
       if (stored === 'light' || stored === 'dark') {
         return stored;
       }
-      // If it is 'system' or not set, detect and default to system
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      return prefersDark ? 'dark' : 'light';
+      if (stored === 'system') {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        return prefersDark ? 'dark' : 'light';
+      }
+      return 'light';
     }
     return 'light';
   });
@@ -39,7 +41,7 @@ export default function ThemeToggle() {
     // Sync with system preferences change if the user hasn't overridden
     const media = window.matchMedia('(prefers-color-scheme: dark)');
     const handleSystemThemeChange = (e) => {
-      if (!localStorage.getItem('theme')) {
+      if (localStorage.getItem('theme') === 'system') {
         const systemTheme = e.matches ? 'dark' : 'light';
         setThemeState(systemTheme);
         applyTheme(systemTheme);
