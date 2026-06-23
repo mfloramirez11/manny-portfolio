@@ -62,7 +62,7 @@ const BioPage = () => {
           Manny Flores
         </motion.h1>
         <motion.p className="bio-role" variants={faderVariants(shouldReduceMotion)}>
-          Senior Systems Engineer · SF Bay Area
+          Engineer · Runner · Soon-to-be Father · SF Bay Area
         </motion.p>
 
         <motion.div className="bio-link-list" variants={staggerContainer(shouldReduceMotion)}>
