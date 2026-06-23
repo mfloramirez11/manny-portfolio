@@ -48,6 +48,7 @@
   font-family: var(--font-mono);
   font-size: var(--fs-sm);
   letter-spacing: 0.08em;
+  line-height: 1.7;
   text-transform: uppercase;
   color: var(--color-text);
   margin-bottom: var(--space-9);
@@ -56,7 +57,7 @@
 
 @media (max-width: 480px) {
   .bio-role {
-    letter-spacing: 0.04em;
+    letter-spacing: 0.03em;
   }
 }
 
