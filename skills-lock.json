@@ -1,12 +1,6 @@
 {
   "version": 1,
   "skills": {
-    "a11y-audit": {
-      "source": "snapsynapse/skill-a11y-audit",
-      "sourceType": "github",
-      "skillPath": "a11y-audit/SKILL.md",
-      "computedHash": "f000f22749361e407a26885e206ac2b7f03f262862aa65c3f74b75ca213cc198"
-    },
     "impeccable": {
       "source": "pbakaus/impeccable",
       "sourceType": "github",
