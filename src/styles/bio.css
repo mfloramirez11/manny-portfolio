@@ -53,6 +53,8 @@
   color: var(--color-text);
   margin-bottom: var(--space-9);
   text-wrap: balance;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 @media (max-width: 480px) {
