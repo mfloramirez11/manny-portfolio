@@ -36,7 +36,7 @@ const BioPage = () => {
   }, []);
 
   return (
-    <div className="bio-page">
+    <main className="bio-page">
       <div className="bio-theme-toggle">
         <ThemeToggle />
       </div>
@@ -84,7 +84,7 @@ const BioPage = () => {
           © {new Date().getFullYear()} Manny Flores
         </motion.p>
       </motion.div>
-    </div>
+    </main>
   );
 };
 

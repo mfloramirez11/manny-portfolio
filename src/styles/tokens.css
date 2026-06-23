@@ -16,7 +16,7 @@
 
   --color-text: oklch(17.5% 0.014 50);         /* Roma Ink */
   --color-text-muted: oklch(37.5% 0.012 50);   /* Ink Mid */
-  --color-text-subtle: oklch(57.5% 0.012 50);  /* Ink Subtle */
+  --color-text-subtle: oklch(50.0% 0.012 50);  /* Ink Subtle · darkened for WCAG AA contrast (>=4.5:1) */
   --color-text-on-emphasis: oklch(95.2% 0.017 77);
 
   --color-accent: oklch(57.5% 0.150 42);       /* Roma Clay / Tezontle · brand stamp */
@@ -141,7 +141,7 @@
 
     --color-text: oklch(95.2% 0.017 77);         /* Warm parchment text for pristine legibility */
     --color-text-muted: oklch(75.2% 0.015 77);   /* Muted warm parchment */
-    --color-text-subtle: oklch(55.2% 0.012 77);  /* Subtle warm parchment */
+    --color-text-subtle: oklch(60.0% 0.012 77);  /* Subtle warm parchment · darkened for WCAG AA contrast (>=4.5:1) */
     --color-text-on-emphasis: oklch(14.5% 0.014 50);
 
     /* Accents are slightly lightened/vibrant clay brand colors for enhanced dark contrast */
@@ -186,7 +186,7 @@
 
   --color-text: oklch(95.2% 0.017 77);         /* Warm parchment text for pristine legibility */
   --color-text-muted: oklch(75.2% 0.015 77);   /* Muted warm parchment */
-  --color-text-subtle: oklch(55.2% 0.012 77);  /* Subtle warm parchment */
+  --color-text-subtle: oklch(60.0% 0.012 77);  /* Subtle warm parchment · darkened for WCAG AA contrast (>=4.5:1) */
   --color-text-on-emphasis: oklch(14.5% 0.014 50);
 
   /* Accents are slightly lightened/vibrant clay brand colors for enhanced dark contrast */
