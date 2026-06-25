@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Globe, Heart, Baby, Mail } from 'lucide-react';
-import { GithubIcon, LinkedinIcon, InstagramIcon } from '../components/icons/BrandIcons';
+import { LinkedinIcon, InstagramIcon } from '../components/icons/BrandIcons';
 import ThemeToggle from '../components/ThemeToggle';
 import BioLink from '../components/BioLink';
 
@@ -10,7 +10,6 @@ const LINKS = [
   { href: 'https://mannyandcelesti.com', icon: <Heart size={20} />, label: 'mannyandcelesti.com', sublabel: 'Family website' },
   { href: 'https://www.amazon.com/baby-reg/celesti-hao-manny-flores-july-2026-pinole/1NWHK22CZPH2H', icon: <Baby size={20} />, label: 'Baby Registry', sublabel: 'Amazon' },
   { href: 'https://www.linkedin.com/in/mannyflores11/', icon: <LinkedinIcon size={20} />, label: 'LinkedIn' },
-  { href: 'https://github.com/mfloramirez11', icon: <GithubIcon size={20} />, label: 'GitHub' },
   { href: 'https://instagram.com/mannyrunning', icon: <InstagramIcon size={20} />, label: '@mannyrunning', sublabel: 'Instagram' },
   { href: 'mailto:mannyflores1193@gmail.com', icon: <Mail size={20} />, label: 'Email' },
 ];
